@@ -23,7 +23,18 @@ def createMessage(threadId: str, msg: str) -> str:
   return message.id
 
 def createThread() -> str:
-  thread = client.beta.threads.create()
+  thread = client.beta.threads.create(messages=[{
+    "role": "user",
+    "content": "Meu nome é Ramon e estou interessado em tirar dúvidas sobre o serviço!"
+  }])
+
+  return thread.id
+
+def createThreadWithBasicData(instruction: str) -> str:
+  thread = client.beta.threads.create(messages=[{
+    "role": "user",
+    "content": instruction,
+  }])
 
   return thread.id
 

@@ -7,8 +7,8 @@ import uvicorn
 
 load_dotenv()
 
-from chat import createThread, createMessage, executeMessage, retriveMessage, createAssistant
-from models import BodyMessage
+import chat
+from models import BodyMessage, User
 
 app = FastAPI()
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
   uvicorn.run("main:app", host="0.0.0.0", port=3000, reload=isDevelopment)
 
   if assistant_id == None:
-    assistant_id = createAssistant()
+    assistant_id = chat.createAssistant()
 
 
 @app.get("/health_check")
@@ -30,8 +30,8 @@ def get_health_check() -> object:
   }
 
 @app.post("/chat")
-def create_chat() -> object:
-  threadId = createThread()
+def create_chat(User: User) -> object:
+  threadId = chat.createThreadWithBasicData(f"Hello! My name is {User.name} and I have interest in this service!")
 
   return JSONResponse(jsonable_encoder({
     "status": "success",
@@ -43,8 +43,8 @@ def create_chat() -> object:
 
 @app.post("/chat/{threadId}")
 def publish_message(threadId: str, Body: BodyMessage) -> object:
-  messageId = createMessage(threadId, Body.message)
-  runId = executeMessage(assistant_id, threadId)
+  messageId = chat.createMessage(threadId, Body.message)
+  runId = chat.executeMessage(assistant_id, threadId)
   
   return JSONResponse(jsonable_encoder({
     "status": "success",
@@ -58,7 +58,7 @@ def publish_message(threadId: str, Body: BodyMessage) -> object:
 
 @app.get("/chat/{threadId}")
 def get_message(threadId: str, run_id: str) -> object:
-  message = retriveMessage(threadId, run_id)
+  message = chat.retriveMessage(threadId, run_id)
 
   return JSONResponse(jsonable_encoder({
     "status": "success",
