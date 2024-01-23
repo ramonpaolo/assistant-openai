@@ -23,7 +23,7 @@ These instructions will help you get My Awesome App up and running on your local
 
 ## Usage
 
-Access the [file](docs/assistant-openai.postman_collection.json) to get example of requests.
+Access the folder [docs](docs/) to get example of requests.
 
 ## Contributing
 

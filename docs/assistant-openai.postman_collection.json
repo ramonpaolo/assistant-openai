@@ -8,6 +8,20 @@
 	"item": [
 		{
 			"name": "Create Chat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json()",
+							"",
+							"pm.environment.set(\"thread_id\", response.data.thread_id)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -25,12 +39,27 @@
 		},
 		{
 			"name": "Publish Message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json()",
+							"",
+							"pm.environment.set(\"message_id\", response.data.message_id)",
+							"pm.environment.set(\"run_id\", response.data.run_id)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"message\": \"What is the more cheap plan?\"\n}",
+					"raw": "{\n    \"message\": \"Hello, how are you? What's the cheapest plan?\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -38,13 +67,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/chat/thread_",
+					"raw": "{{base_url}}/chat/{{thread_id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"chat",
-						"thread_"
+						"{{thread_id}}"
 					]
 				}
 			},
@@ -52,22 +81,33 @@
 		},
 		{
 			"name": "Get Message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/chat/thread_?run_id=run_",
+					"raw": "{{base_url}}/chat/{{thread_id}}?run_id={{run_id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"chat",
-						"thread_"
+						"{{thread_id}}"
 					],
 					"query": [
 						{
 							"key": "run_id",
-							"value": "run_"
+							"value": "{{run_id}}"
 						}
 					]
 				}
