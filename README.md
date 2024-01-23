@@ -15,11 +15,34 @@ This project can be used in a lot of scenarios, how as:
 
 ## Getting Started
 
-These instructions will help you get My Awesome App up and running on your local machine for development and testing purposes.
+These instructions will help you get Assistant OpenAI up and running on your local machine for development and testing purposes.
 
-1. Clone this repository: `git clone https://github.com/ramonpaolo/assistant-openai.git`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Run the server: `uvicorn main:app --reload`
+### Running Locally with Docker
+```bash
+# Clone this repository
+$ git clone https://github.com/ramonpaolo/assistant-openai.git
+
+# Set the environment variables
+$ nano .env
+
+# Run the docker-compose
+$ docker-compose up --build -d
+```
+
+### Running Locally without Docker
+```bash
+# Clone this repository
+$ git clone https://github.com/ramonpaolo/assistant-openai.git
+
+# Set the environment variables
+$ nano .env
+
+# Install the dependencies
+$ pip install -r requirements.txt
+
+# Run the uvicorn
+$ uvicorn main:app --reload
+```
 
 ## Usage
 
@@ -40,7 +63,5 @@ We welcome contributions from the community! If you'd like to contribute, please
 This project is licensed under the MIT - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
-
-[Optional section to thank contributors, libraries, or other resources that helped in the development of your app]
 
 Enjoy using Assistant OpenAI! If you have any questions or feedback, please don't hesitate to reach out to me.
