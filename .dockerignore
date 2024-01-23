@@ -1,0 +1,13 @@
+# Files
+.env
+.gitignore
+Dockerfile
+docker-compose.yml
+development.Dockerfile
+README.md
+
+# Folders
+__pycache__
+kubernetes
+docs
+myenv

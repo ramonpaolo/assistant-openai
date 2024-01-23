@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: development.Dockerfile
+    volumes:
+      - ./:/usr/src/app:rw
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
