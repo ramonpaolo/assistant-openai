@@ -66,6 +66,8 @@ $ kubectl apply -f kubernetes
 
 Access the folder [docs](docs/) to get example of requests.
 
+The file [context.txt](docs/context.txt) in `docs/`, is a small example of context to be used in Assistant!
+
 ## Contributing
 
 We welcome contributions from the community! If you'd like to contribute, please follow these steps:
