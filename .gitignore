@@ -1,0 +1,7 @@
+# Folders
+myenv
+__pycache__
+
+# Files
+.env
+context*.txt
