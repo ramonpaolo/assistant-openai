@@ -1,9 +1,19 @@
 from fastapi import FastAPI
+from dotenv import load_dotenv
+from os import getenv
 
-from chat import createThread, createMessage, executeMessage, retriveMessage
+load_dotenv()
+
+from chat import createThread, createMessage, executeMessage, retriveMessage, createAssistant
 from models import BodyMessage
 
 app = FastAPI()
+
+assistant_id = getenv("ASSISTANT_ID")
+
+if __name__ == "main":
+  if assistant_id == None:
+    assistant_id = createAssistant()
 
 @app.post("/chat")
 def create_chat() -> object:
@@ -20,7 +30,7 @@ def create_chat() -> object:
 @app.post("/chat/{threadId}")
 def publish_message(threadId: str, Body: BodyMessage) -> object:
   messageId = createMessage(threadId, Body.message)
-  runId = executeMessage("asst_uVB4evcqqMVbev3nrKR909PP", threadId)
+  runId = executeMessage(assistant_id, threadId)
   
   return {
     "status": "success",
