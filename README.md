@@ -44,6 +44,24 @@ $ pip install -r requirements.txt
 $ uvicorn main:app --reload
 ```
 
+### Running with K8s
+```bash
+# Clone this repository
+$ git clone https://github.com/ramonpaolo/assistant-openai.git
+
+# Set the environment variables
+$ nano kubernetes/secrets.yml
+
+# Build the container image
+$ docker buildx build --platform linux/amd64 -t <your-name-user>/<name-of-image>:latest .
+
+# Upload the image do hub.docker(Image Registry)
+$ docker push <your-name-user>/<name-of-image>:latest
+
+# Apply kubernetes configs
+$ kubectl apply -f kubernetes
+```
+
 ## Usage
 
 Access the folder [docs](docs/) to get example of requests.
