@@ -8,8 +8,12 @@ spec:
       app: server-pod
   template:
     metadata:
+      name: server-pod
+      annotations:
+        ad.datadoghq.com/server.logs: '[{"source":"python","service":"assistant-openai"}]'
       labels:
         app: server-pod
+        environment: production
     spec:
       containers:
         - name: server

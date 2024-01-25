@@ -60,6 +60,9 @@ $ docker push <your-name-user>/<name-of-image>:latest
 
 # Apply kubernetes configs
 $ kubectl apply -f kubernetes
+
+# Install and configure datadog-agent to collect logs and metrics
+$ helm install dd-agent -f kubernetes/values.yml --set datadog.apiKey=<api-key> datadog/datadog
 ```
 
 ## Usage
