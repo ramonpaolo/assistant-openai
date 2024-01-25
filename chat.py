@@ -23,10 +23,7 @@ def createMessage(threadId: str, msg: str) -> str:
   return message.id
 
 def createThread() -> str:
-  thread = client.beta.threads.create(messages=[{
-    "role": "user",
-    "content": "Meu nome é Ramon e estou interessado em tirar dúvidas sobre o serviço!"
-  }])
+  thread = client.beta.threads.create()
 
   return thread.id
 
@@ -45,7 +42,7 @@ def executeMessage(assistantId: str, threadId: str) -> str:
 
 def retriveMessage(threadId: str, runId: str) -> str:
   try:
-    run = client.beta.threads.runs.retrieve(thread_id=threadId, run_id=runId)
+    run = client.beta.threads.runs.retrieve(thread_id=threadId, run_id=runId, timeout=10)
 
     if run.completed_at:
       messages = client.beta.threads.messages.list(thread_id=threadId)
