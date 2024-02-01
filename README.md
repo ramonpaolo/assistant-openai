@@ -15,13 +15,28 @@ This project can be used in a lot of scenarios, how as:
 
 ## Getting Started
 
+### Info about branchs
+We currently have 3 branchs:
+- `main`
+  - Support K8s and Docker
+- `logs/datadog`
+  - Support K8s, Docker and DataDog Agent to send metrics and logs from STDOUT
+- `serverless/aws_lambda`
+  - Support AWS Lambda with API Gateway
+
+### Start
+
 These instructions will help you get Assistant OpenAI up and running on your local machine for development and testing purposes.
+
+### First command to be executed:
+
+```bash
+# Clone this repository with the specific branch
+$ git clone -b <desired-branch> https://github.com/ramonpaolo/assistant-openai.git
+```
 
 ### Running Locally with Docker
 ```bash
-# Clone this repository
-$ git clone https://github.com/ramonpaolo/assistant-openai.git
-
 # Set the environment variables
 $ nano .env
 
@@ -31,9 +46,6 @@ $ docker-compose up --build -d
 
 ### Running Locally without Docker
 ```bash
-# Clone this repository
-$ git clone https://github.com/ramonpaolo/assistant-openai.git
-
 # Set the environment variables
 $ nano .env
 
@@ -46,9 +58,6 @@ $ uvicorn main:app --reload
 
 ### Running with K8s
 ```bash
-# Clone this repository
-$ git clone https://github.com/ramonpaolo/assistant-openai.git
-
 # Set the environment variables
 $ nano kubernetes/secrets.yml
 
@@ -61,6 +70,9 @@ $ docker push <your-name-user>/<name-of-image>:latest
 # Apply kubernetes configs
 $ kubectl apply -f kubernetes
 ```
+
+### Running with AWS Lambda
+_Only available to execute in CI/CD pipelines_
 
 ## Usage
 
