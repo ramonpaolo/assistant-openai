@@ -1,0 +1,38 @@
+service: assistant-openai-bot
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.11
+  architecture: arm64
+  environment:
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+    ASSISTANT_ID: ${env:ASSISTANT_ID}
+    APP_ENV: ${env:APP_ENV}
+  httpApi:
+    cors: true
+
+functions:
+  create_chat:
+    handler: main.create_chat
+    events:
+      - httpApi:
+          method: POST
+          path: /chat
+
+  publish_message:
+    handler: main.publish_message
+    events:
+      - httpApi:
+          method: POST
+          path: /chat/{threadId}
+
+  get_message:
+    handler: main.get_message
+    events:
+      - httpApi:
+          method: GET
+          path: /chat/{threadId}
+
+plugins:
+  - serverless-python-requirements

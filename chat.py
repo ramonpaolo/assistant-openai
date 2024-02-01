@@ -44,10 +44,13 @@ def retriveMessage(threadId: str, runId: str) -> str:
   try:
     run = client.beta.threads.runs.retrieve(thread_id=threadId, run_id=runId, timeout=10)
 
+    if run.status == "failed" or run.status == "cancelled":
+      raise Exception(run.last_error)
+
     if run.completed_at:
       messages = client.beta.threads.messages.list(thread_id=threadId)
       last_message = messages.data[0]
 
       return last_message.content[0].text.value
-  except:
-    print('some error ocurred when try to retrive execution of message!')
+  except Exception as e:
+    print(f'some error ocurred when try to retrive execution of message!\nerror: {e}')

@@ -1,6 +1,7 @@
 # Folders
 myenv
 __pycache__
+node_modules
 
 # Files
 .env

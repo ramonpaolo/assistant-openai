@@ -1,49 +1,37 @@
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
-from dotenv import load_dotenv
 from os import getenv
-import uvicorn
+from json import dumps, loads
+
 import logging
 
-load_dotenv()
-
 import chat
-from models import BodyMessage, User
 
-app = FastAPI()
+logger = logging.getLogger()
+logger.setLevel("INFO")
 
-logging.basicConfig(level=logging.INFO,  format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+if getenv("APP_ENV") != "production":
+  from dotenv import load_dotenv
+  load_dotenv()
 
 assistant_id = getenv("ASSISTANT_ID")
 
-if __name__ == "__main__":
-  isDevelopment = getenv("APP_ENV") == "development"
-
-  uvicorn.run("main:app", host="0.0.0.0", port=3000, reload=isDevelopment)
-
-  if assistant_id == None:
-    assistant_id = chat.createAssistant()
-
-
-@app.get("/health_check")
 def get_health_check() -> object:
-  return {
+  return {"statusCode": 201, "body": dumps({
     "status": "ok"
-  }
+  })}
 
-@app.post("/chat")
-def create_chat(User: User) -> object:
+def create_chat(event, _) -> object:
   context = ""
   threadId = ""
 
-  if User.name != "" and User.name != None:
-    context = f"Hello! My name is {User.name} and I have interest in this service!"
+  User = loads(event["body"])
+
+  if User["name"] != "" and User["name"] != None:
+    context = f"Hello! My name is {User['name']} and I have interest in this service!"
     threadId = chat.createThreadWithBasicData(context)
   else:
     threadId = chat.createThread()
 
-  logging.log(logging.INFO, {
+  logger.info({
     "message": "chat created with success!",
     "data": {
       "with_context": context != "",
@@ -51,30 +39,35 @@ def create_chat(User: User) -> object:
     },
   })
 
-  return JSONResponse(jsonable_encoder({
+  return {"statusCode": 201, "body": dumps({
     "status": "success",
     "message": "created thread with success",
     "data": {
       "thread_id": threadId,
     },
-  }), 201)
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  },}
 
-@app.post("/chat/{threadId}")
-def publish_message(threadId: str, Body: BodyMessage) -> object:
-  messageId = chat.createMessage(threadId, Body.message)
+def publish_message(event, _) -> object:
+  threadId = event["pathParameters"]["threadId"]
+  message = loads(event["body"])["message"]
+
+  messageId = chat.createMessage(threadId, message)
   runId = chat.executeMessage(assistant_id, threadId)
 
-  logging.log(logging.INFO, {
+  logger.info({
     "message": "message published with success",
     "data": {
       "thread_id": threadId,
       "message_id": messageId,
       "run_id": runId,
-      "message": Body.message,
+      "message": message,
     },
   })
   
-  return JSONResponse(jsonable_encoder({
+  return {"statusCode": 201, "body": dumps({
     "status": "success",
     "message": "message published with success",
     "data": {
@@ -82,35 +75,42 @@ def publish_message(threadId: str, Body: BodyMessage) -> object:
       "message_id": messageId,
       "run_id": runId,
     },
-  }), 201)
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  },}
 
-@app.get("/chat/{threadId}")
-def get_message(threadId: str, run_id: str) -> object:
-  message = chat.retriveMessage(threadId, run_id)
+def get_message(event, _) -> object:
+  threadId = event["pathParameters"]["threadId"]
+  runId = event["queryStringParameters"]["run_id"]
+
+  message = chat.retriveMessage(threadId, runId)
 
   if message == None:
-    logging.log(logging.INFO, {
+    logger.info({
       "message": "message not already yet",
       "data": {
         "thread_id": threadId,
-        "run_id": run_id,
+        "run_id": runId,
       },
     })
   else:
-    logging.log(logging.INFO, {
+    logger.info({
       "message": "get message with success",
       "data": {
         "thread_id": threadId,
-        "run_id": run_id,
+        "run_id": runId,
         "message": message,
       },
     })
 
-  return JSONResponse(jsonable_encoder({
+  return {"statusCode": 200, "body": dumps({
     "status": "success",
     "message": "message get with success",
     "data": {
-      "run_id": run_id,
+      "run_id": runId,
       "message": message,
     },
-  }), 200)
+  }), "headers": {
+    "Content-Type": "application/json"
+  }}
