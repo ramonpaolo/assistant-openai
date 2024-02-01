@@ -1,0 +1,34 @@
+name: Deploy Lambda
+
+on: 
+  push: 
+    branches: 
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+    
+      - name: Install Python Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Deploy Serverless
+        run: serverless plugin install --name serverless-python-requirements && serverless deploy --stage production
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ASSISTANT_ID: ${{ secrets.ASSISTANT_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          APP_ENV: production
