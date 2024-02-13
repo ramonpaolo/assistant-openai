@@ -34,5 +34,12 @@ functions:
           method: GET
           path: /chat/{threadId}
 
+  get_health_check:
+    handler: main.get_health_check
+    events:
+      - httpApi:
+          method: GET
+          path: /health_check
+
 plugins:
   - serverless-python-requirements
